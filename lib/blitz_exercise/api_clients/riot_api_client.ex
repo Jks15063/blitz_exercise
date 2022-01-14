@@ -18,6 +18,17 @@ defmodule BlitzExercise.ApiClients.RiotApiClient do
     |> Map.get("puuid")
   end
 
+  def fetch_latest_match_id(puuid, region \\ "americas") do
+    url = "https://#{region}.api.riotgames.com/lol/match/v5/matches/by-puuid/#{puuid}/ids"
+    params = %{start: 0, count: 1, api_key: @api_key}
+
+    url
+    |> HTTPoison.get!(@headers, params: params)
+    |> Map.get(:body)
+    |> Jason.decode!()
+    |> List.first()
+  end
+
   def fetch_champion_played_from_match(match_id, puuid, region \\ "americas") do
     match_id
     |> fetch_match_details(region)
