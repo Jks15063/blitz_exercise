@@ -14,9 +14,8 @@ defmodule BlitzExercise.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: BlitzExercise.PubSub},
       # Start the Endpoint (http/https)
-      BlitzExerciseWeb.Endpoint
-      # Start a worker by calling: BlitzExercise.Worker.start_link(arg)
-      # {BlitzExercise.Worker, arg}
+      BlitzExerciseWeb.Endpoint,
+      BlitzExercise.Genservers.RiotProfileWatcher
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
