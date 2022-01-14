@@ -8,7 +8,8 @@
 use Mix.Config
 
 config :blitz_exercise,
-  ecto_repos: [BlitzExercise.Repo]
+  ecto_repos: [BlitzExercise.Repo],
+  riot_api_key: System.get_env("API_KEY")
 
 # Configures the endpoint
 config :blitz_exercise, BlitzExerciseWeb.Endpoint,

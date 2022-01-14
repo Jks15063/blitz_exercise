@@ -1,7 +1,8 @@
 defmodule BlitzExercise.ApiClients.RiotApiClient do
   @behaviour BlitzExercise.RiotApiBehaviour
 
-  @api_key "RGAPI-cba1ec74-23c9-4414-acc2-ca41a6cd69da"
+  @api_key Application.get_env(:blitz_exercise, :riot_api_key)
+
   @headers %{
     "Accept-Language" => "en-US,en;q=0.5",
     "Accept-Charset" => "application/x-www-form-urlencoded; charset=UTF-8",
