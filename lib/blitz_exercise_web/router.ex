@@ -21,9 +21,13 @@ defmodule BlitzExerciseWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", BlitzExerciseWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", BlitzExerciseWeb.Api, as: :api do
+    pipe_through :api
+
+    resources "/matches/summoner/champions", MatchController,
+      only: [:show],
+      param: "summoner_name"
+  end
 
   # Enables LiveDashboard only for development
   #

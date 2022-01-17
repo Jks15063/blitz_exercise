@@ -8,7 +8,7 @@ defmodule BlitzExercise.ApiClients.RiotApiClient do
   }
 
   @impl BlitzExercise.RiotApiBehaviour
-  def fetch_summoner_puuid(summoner_name, region \\ "na1") do
+  def fetch_summoner_puuid(summoner_name, region) do
     url = "https://#{region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/#{summoner_name}"
 
     url
@@ -26,7 +26,7 @@ defmodule BlitzExercise.ApiClients.RiotApiClient do
     Jason.decode!(resp.body)
   end
 
-  def fetch_last_five_champions_played(puuid, region \\ "americas") do
+  def fetch_last_five_champions_played(puuid, region) do
     puuid
     |> fetch_match_list(region)
     |> Enum.map(&fetch_match_details(&1, region))
