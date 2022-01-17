@@ -2,8 +2,11 @@ defmodule BlitzExercise.Genservers.RiotProfileWatcher do
   use GenServer
   require Logger
 
-  # @refresh_time 1 * 60 * 1000
+  alias BlitzExercise.ApiClients.RiotApiClient
+
+  # @refresh_time 60 * 1000
   @refresh_time 5 * 1000
+  @watch_time 60 * 60 * 1000
 
   def init(state) do
     refresh_state()

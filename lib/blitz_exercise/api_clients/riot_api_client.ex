@@ -18,21 +18,12 @@ defmodule BlitzExercise.ApiClients.RiotApiClient do
     |> Map.get("puuid")
   end
 
-  def fetch_latest_match_id(puuid, region \\ "americas") do
+  def fetch_match_list(puuid, region, count \\ 5) do
     url = "https://#{region}.api.riotgames.com/lol/match/v5/matches/by-puuid/#{puuid}/ids"
-    params = %{start: 0, count: 1, api_key: @api_key}
+    params = %{start: 0, count: count, api_key: @api_key}
 
-    url
-    |> HTTPoison.get!(@headers, params: params)
-    |> Map.get(:body)
-    |> Jason.decode!()
-    |> List.first()
-  end
-
-  def fetch_champion_played_from_match(match_id, puuid, region \\ "americas") do
-    match_id
-    |> fetch_match_details(region)
-    |> summoner_champion_name(puuid)
+    resp = HTTPoison.get!(url, @headers, params: params)
+    Jason.decode!(resp.body)
   end
 
   def fetch_last_five_champions_played(puuid, region \\ "americas") do
@@ -40,14 +31,6 @@ defmodule BlitzExercise.ApiClients.RiotApiClient do
     |> fetch_match_list(region)
     |> Enum.map(&fetch_match_details(&1, region))
     |> Enum.map(&summoner_champion_name(&1, puuid))
-  end
-
-  defp fetch_match_list(puuid, region) do
-    url = "https://#{region}.api.riotgames.com/lol/match/v5/matches/by-puuid/#{puuid}/ids"
-    params = %{start: 0, count: 5, api_key: @api_key}
-
-    resp = HTTPoison.get!(url, @headers, params: params)
-    Jason.decode!(resp.body)
   end
 
   defp fetch_match_details(match_id, region) do

@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 config :blitz_exercise,
   ecto_repos: [BlitzExercise.Repo],
