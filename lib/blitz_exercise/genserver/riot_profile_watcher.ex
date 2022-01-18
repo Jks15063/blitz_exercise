@@ -1,6 +1,5 @@
 defmodule BlitzExercise.Genservers.RiotProfileWatcher do
-  use GenServer
-  require Logger
+  use GenServer, restart: :transient
 
   alias BlitzExercise.ApiClients.RiotApiClient
 
@@ -8,11 +7,11 @@ defmodule BlitzExercise.Genservers.RiotProfileWatcher do
   @supervisor BlitzExercise.SummonerSupervisor
 
   @refresh_time 60 * 1000
-  # @refresh_time 5 * 1000
   @watch_time 60 * 60 * 1000
 
   def init({puuid, region}) do
     [latest_match_id] = RiotApiClient.fetch_match_list(puuid, region, 1)
+    Process.send_after(self(), :watcher_timeout, @watch_time)
     check_for_new_match()
 
     {:ok, {puuid, region, latest_match_id}}
@@ -29,20 +28,13 @@ defmodule BlitzExercise.Genservers.RiotProfileWatcher do
     {:noreply, {puuid, region, new_match_id}}
   end
 
-  def start_link({puuid, region}) do
-    GenServer.start_link(__MODULE__, {puuid, region}, name: process_name(puuid))
+  def handle_info(:watcher_timeout, {puuid, _, _} = state) do
+    IO.puts("Killing watcher for summoner: #{puuid}")
+    {:stop, :shutdown, state}
   end
 
-  def lookup(puuid) do
-    case Registry.lookup(@registry, "summoner_#{puuid}") do
-      [{pid, _}] ->
-        {:ok, pid}
-
-      [] ->
-        {:error, :not_found}
-    end
-
-    puuid
+  def start_link({puuid, region}) do
+    GenServer.start_link(__MODULE__, {puuid, region}, name: process_name(puuid))
   end
 
   def watch_summoner(puuid, region) do
