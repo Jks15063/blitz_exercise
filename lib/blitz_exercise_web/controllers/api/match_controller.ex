@@ -2,6 +2,7 @@ defmodule BlitzExerciseWeb.Api.MatchController do
   use BlitzExerciseWeb, :controller
 
   alias BlitzExercise.ApiClients.RiotApiClient
+  alias BlitzExercise.Genservers.RiotProfileWatcher
 
   @match_region_map %{
     "br1" => "americas",
@@ -21,8 +22,10 @@ defmodule BlitzExerciseWeb.Api.MatchController do
     champion_list =
       summoner_name
       |> RiotApiClient.fetch_summoner_puuid(region)
+      |> RiotProfileWatcher.watch_summoner(@match_region_map[region])
       |> RiotApiClient.fetch_last_five_champions_played(@match_region_map[region])
 
+    IO.inspect(champion_list, label: "Last 5 champions played")
     json(conn, %{data: champion_list})
   end
 end

@@ -15,7 +15,8 @@ defmodule BlitzExercise.Application do
       {Phoenix.PubSub, name: BlitzExercise.PubSub},
       # Start the Endpoint (http/https)
       BlitzExerciseWeb.Endpoint,
-      BlitzExercise.Genservers.RiotProfileWatcher
+      {Registry, keys: :unique, name: BlitzExercise.Registry},
+      {DynamicSupervisor, name: BlitzExercise.SummonerSupervisor, strategy: :one_for_one}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
