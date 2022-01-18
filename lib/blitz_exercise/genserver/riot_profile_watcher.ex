@@ -1,8 +1,6 @@
 defmodule BlitzExercise.Genservers.RiotProfileWatcher do
   use GenServer, restart: :transient
 
-  alias BlitzExercise.ApiClients.RiotApiClient
-
   @registry BlitzExercise.Registry
   @supervisor BlitzExercise.SummonerSupervisor
 
@@ -10,7 +8,7 @@ defmodule BlitzExercise.Genservers.RiotProfileWatcher do
   @watch_time 60 * 60 * 1000
 
   def init({puuid, region}) do
-    [latest_match_id] = RiotApiClient.fetch_match_list(puuid, region, 1)
+    [latest_match_id] = api_client().fetch_match_list(puuid, region, 1)
     Process.send_after(self(), :watcher_timeout, @watch_time)
     check_for_new_match()
 
@@ -18,7 +16,7 @@ defmodule BlitzExercise.Genservers.RiotProfileWatcher do
   end
 
   def handle_info(:check_for_new_match, {puuid, region, latest_match_id}) do
-    [new_match_id] = RiotApiClient.fetch_match_list(puuid, region, 1)
+    [new_match_id] = api_client().fetch_match_list(puuid, region, 1)
 
     if new_match_id != latest_match_id do
       IO.puts("Summoner #{puuid} played a new match: #{new_match_id}")
@@ -39,8 +37,6 @@ defmodule BlitzExercise.Genservers.RiotProfileWatcher do
 
   def watch_summoner(puuid, region) do
     DynamicSupervisor.start_child(@supervisor, {__MODULE__, {puuid, region}})
-
-    puuid
   end
 
   defp process_name(puuid),
@@ -49,4 +45,6 @@ defmodule BlitzExercise.Genservers.RiotProfileWatcher do
   defp check_for_new_match() do
     Process.send_after(self(), :check_for_new_match, @refresh_time)
   end
+
+  defp api_client, do: Application.get_env(:blitz_exercise, :api_client)
 end

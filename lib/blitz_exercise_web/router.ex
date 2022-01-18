@@ -1,5 +1,6 @@
 defmodule BlitzExerciseWeb.Router do
   use BlitzExerciseWeb, :router
+  use Plug.ErrorHandler
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -43,5 +44,13 @@ defmodule BlitzExerciseWeb.Router do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: BlitzExerciseWeb.Telemetry
     end
+  end
+
+  def handle_errors(conn, %{
+        kind: _kind,
+        reason: %{value: {"status", %{"message" => message, "status_code" => status_code}}},
+        stack: _stack
+      }) do
+    send_resp(conn, status_code, "Error: #{status_code}, #{message}")
   end
 end

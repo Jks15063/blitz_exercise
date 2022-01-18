@@ -17,6 +17,11 @@ defmodule BlitzExerciseWeb.Api.MatchControllerTest do
       end)
 
       BlitzExercise.RiotApiBehaviourMock
+      |> expect(:fetch_match_list, fn _puuid, _region, _count ->
+        ["match_1", "match_2", "match_3", "match_4", "match_5"]
+      end)
+
+      BlitzExercise.RiotApiBehaviourMock
       |> expect(:fetch_last_five_champions_played, fn _puuid, _region ->
         ["a", "b", "c", "d", "e"]
       end)
@@ -25,10 +30,6 @@ defmodule BlitzExerciseWeb.Api.MatchControllerTest do
                conn = get(conn, Routes.api_match_path(conn, :show, "test", region: "region"))
                assert ["a", "b", "c", "d", "e"] = json_response(conn, 200)["data"]
              end) == "Last 5 champions played: [\"a\", \"b\", \"c\", \"d\", \"e\"]\n"
-
-      # TODO: find a way to test new process started
-      # assert Task.Supervisor.children(:simple_name) == ["summoner_puuid"]
-      # assert Task.Supervisor.children({:via, Registry, {BlitzExercise.Registry, "summoner_puuid"}}) == []
     end
   end
 end
