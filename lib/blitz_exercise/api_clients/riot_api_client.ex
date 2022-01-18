@@ -18,6 +18,7 @@ defmodule BlitzExercise.ApiClients.RiotApiClient do
     |> Map.get("puuid")
   end
 
+  @impl BlitzExercise.RiotApiBehaviour
   def fetch_match_list(puuid, region, count \\ 5) do
     url = "https://#{region}.api.riotgames.com/lol/match/v5/matches/by-puuid/#{puuid}/ids"
     params = %{start: 0, count: count, api_key: @api_key}
@@ -26,6 +27,7 @@ defmodule BlitzExercise.ApiClients.RiotApiClient do
     Jason.decode!(resp.body)
   end
 
+  @impl BlitzExercise.RiotApiBehaviour
   def fetch_last_five_champions_played(puuid, region) do
     puuid
     |> fetch_match_list(region)

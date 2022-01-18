@@ -1,4 +1,6 @@
-use Mix.Config
+import Config
+
+config :blitz_exercise, api_client: BlitzExercise.RiotApiBehaviourMock
 
 # Configure your database
 #

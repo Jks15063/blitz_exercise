@@ -21,11 +21,13 @@ defmodule BlitzExerciseWeb.Api.MatchController do
   def show(conn, %{"region" => region, "summoner_name" => summoner_name}) do
     champion_list =
       summoner_name
-      |> RiotApiClient.fetch_summoner_puuid(region)
+      |> api_client().fetch_summoner_puuid(region)
       |> RiotProfileWatcher.watch_summoner(@match_region_map[region])
-      |> RiotApiClient.fetch_last_five_champions_played(@match_region_map[region])
+      |> api_client().fetch_last_five_champions_played(@match_region_map[region])
 
     IO.inspect(champion_list, label: "Last 5 champions played")
     json(conn, %{data: champion_list})
   end
+
+  defp api_client, do: Application.get_env(:blitz_exercise, :api_client)
 end

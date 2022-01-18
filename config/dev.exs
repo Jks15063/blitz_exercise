@@ -1,5 +1,7 @@
 import Config
 
+config :blitz_exercise, api_client: BlitzExercise.ApiClients.RiotApiClient
+
 # Configure your database
 config :blitz_exercise, BlitzExercise.Repo,
   username: "postgres",
