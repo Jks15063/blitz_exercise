@@ -8,6 +8,13 @@ To setup the project:
   * Export your API key in the terminal: `export API_KEY=<your riot API key>`
   * Start the project: `iex -S mix phx.server`
 
-To start watching a summoner:
-Visit: `http://localhost:4000/api/matches/summoner/champions/<summoner_name>?region=<region>`
-It will return a JSON response containing the names of the champions played in the last five matches.  These names will be printed out to the terminal as well.  Hitting this route will also start a process that will check for new matches once a minute and stop after an hour.  Multiple summoners can be watched at the same time.
+### To start watching a summoner:
+  * Visit: `http://localhost:4000/api/matches/summoner/champions/<summoner_name>?region=<region>`
+  * Region list: `["br1", "la1", "la2", "oc1", "na1", "kr", "jp", "eun1", "euw1", "ru", "tr1"]`
+
+  It will return a JSON response containing the names of the champions played in
+  the last five matches. These names will be printed out to the terminal as well.
+  Hitting this route will also start a process that will check for new matches
+  once a minute and stop after an hour. Multiple summoners can be watched at the
+  same time.
+
