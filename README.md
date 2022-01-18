@@ -10,4 +10,4 @@ To setup the project:
 
 To start watching a summoner:
 Visit: `http://localhost:4000/api/matches/summoner/champions/<summoner_name>?region=<region>`
-It will return a JSON response containing the names of the champions played in the last five matches.  These names will also be printed out to the terminal as well.  Hitting this route will also start a process that will check for new matches once a minute and stop after an hour.
+It will return a JSON response containing the names of the champions played in the last five matches.  These names will be printed out to the terminal as well.  Hitting this route will also start a process that will check for new matches once a minute and stop after an hour.
